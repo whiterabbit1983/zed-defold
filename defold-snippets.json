@@ -1,0 +1,338 @@
+{
+  "Defold Script Template": {
+    "prefix": "script",
+    "body": [
+      "---@class ${1:script}",
+      "",
+      "---@package",
+      "---@param self ${1:script}",
+      "function init(self)",
+      "    $0",
+      "end",
+      "",
+      "---@package",
+      "---@param self ${1:script}",
+      "---@param dt number",
+      "function update(self, dt)",
+      "    ",
+      "end",
+      "",
+      "---@package",
+      "---@param self ${1:script}",
+      "---@param message_id hash",
+      "---@param message table",
+      "---@param sender url",
+      "function on_message(self, message_id, message, sender)",
+      "    ",
+      "end",
+      "",
+      "---@package",
+      "---@param self ${1:script}",
+      "---@param action_id hash",
+      "---@param action on_input.action",
+      "---@return boolean|nil",
+      "function on_input(self, action_id, action)",
+      "    ",
+      "end",
+      "",
+      "---@package",
+      "---@param self ${1:script}",
+      "function final(self)",
+      "    ",
+      "end"
+    ],
+    "description": "Defold script file with annotated lifecycle methods"
+  },
+  "Init Function": {
+    "prefix": "init",
+    "body": [
+      "---@package",
+      "---@param self ${1:script}",
+      "function init(self)",
+      "    $0",
+      "end"
+    ],
+    "description": "Defold script init() function"
+  },
+  "Update Function": {
+    "prefix": "update",
+    "body": [
+      "---@package",
+      "---@param self ${1:script}",
+      "---@param dt number",
+      "function update(self, dt)",
+      "    $0",
+      "end"
+    ],
+    "description": "Defold script update() function"
+  },
+  "Fixed Update Function": {
+    "prefix": "fixed_update",
+    "body": [
+      "---@package",
+      "---@param self ${1:script}",
+      "---@param dt number",
+      "function fixed_update(self, dt)",
+      "    $0",
+      "end"
+    ],
+    "description": "Defold script fixed_update() function"
+  },
+  "On Message Function": {
+    "prefix": "on_message",
+    "body": [
+      "---@package",
+      "---@param self ${1:script}",
+      "---@param message_id hash",
+      "---@param message table",
+      "---@param sender url",
+      "function on_message(self, message_id, message, sender)",
+      "    $0",
+      "end"
+    ],
+    "description": "Defold script on_message() function"
+  },
+  "On Input Function": {
+    "prefix": "on_input",
+    "body": [
+      "---@package",
+      "---@param self ${1:script}",
+      "---@param action_id hash",
+      "---@param action on_input.action",
+      "---@return boolean|nil",
+      "function on_input(self, action_id, action)",
+      "    $0",
+      "end"
+    ],
+    "description": "Defold script on_input() function"
+  },
+  "Final Function": {
+    "prefix": "final",
+    "body": [
+      "---@package",
+      "---@param self ${1:script}",
+      "function final(self)",
+      "    $0",
+      "end"
+    ],
+    "description": "Defold script final() function"
+  },
+  "On Reload Function": {
+    "prefix": "on_reload",
+    "body": [
+      "---@package",
+      "---@param self ${1:script}",
+      "function on_reload(self)",
+      "    $0",
+      "end"
+    ],
+    "description": "Defold script on_reload() function"
+  },
+  "Go Animate": {
+    "prefix": "go_animate",
+    "body": [
+      "go.animate(\"${1:.}\", \"${2:position.y}\", go.PLAYBACK_${3:ONCE_FORWARD}, ${4:100}, go.EASING_${5:LINEAR}, ${6:1}, ${7:0}, function()",
+      "    $0",
+      "end)"
+    ],
+    "description": "Animate game object"
+  },
+  "Msg Post": {
+    "prefix": "msg_post",
+    "body": [
+      "msg.post(\"${1:#}\", \"${2:message_name}\", { ${3:data} = ${4:value} })",
+      "$0"
+    ],
+    "description": "Post message"
+  },
+  "Go Property": {
+    "prefix": "go_property",
+    "body": [
+      "go.property(\"${1:name}\", ${2:value})"
+    ],
+    "description": "Define script property"
+  },
+  "Timer Delay": {
+    "prefix": "timer_delay",
+    "body": [
+      "timer.delay(${1:1}, ${2:false}, function()",
+      "    $0",
+      "end)"
+    ],
+    "description": "Create timer"
+  },
+  "Factory Create": {
+    "prefix": "factory_create",
+    "body": [
+      "local props = { ${1:speed} = ${2:100} }",
+      "local id = factory.create(\"#${3:factory}\", ${4:nil}, ${5:nil}, props)",
+      "$0"
+    ],
+    "description": "Create object from factory"
+  },
+  "GUI Init": {
+    "prefix": "gui_init",
+    "body": [
+      "function init(self)",
+      "    self.${1:node} = gui.get_node(\"${2:node_id}\")",
+      "    $0",
+      "end"
+    ],
+    "description": "GUI initialization"
+  },
+  "GUI On Message": {
+    "prefix": "gui_on_message",
+    "body": [
+      "function on_message(self, message_id, message, sender)",
+      "    if message_id == hash(\"${1:show}\") then",
+      "        gui.set_enabled(self.${2:node}, true)",
+      "        $0",
+      "    end",
+      "end"
+    ],
+    "description": "GUI message handling"
+  },
+  "GUI On Input": {
+    "prefix": "gui_on_input",
+    "body": [
+      "function on_input(self, action_id, action)",
+      "    if action_id == hash(\"${1:touch}\") and action.pressed then",
+      "        local node = gui.pick_node(self.${2:node}, action.x, action.y)",
+      "        if node then",
+      "            $0",
+      "        end",
+      "    end",
+      "end"
+    ],
+    "description": "GUI input handling"
+  },
+  "GUI Animate": {
+    "prefix": "gui_animate",
+    "body": [
+      "gui.animate(self.${1:node}, \"${2:position.y}\", ${3:100}, gui.EASING_${4:LINEAR}, ${5:1}, ${6:0}, function()",
+      "    $0",
+      "end)"
+    ],
+    "description": "Animate GUI node"
+  },
+  "HTTP Request": {
+    "prefix": "http_request",
+    "body": [
+      "http.request(\"${1:https://example.com/api}\", \"${2:GET}\", function(self, id, response)",
+      "    if response.status == 200 then",
+      "        $0",
+      "    end",
+      "end)"
+    ],
+    "description": "HTTP request"
+  },
+  "Acquire Input": {
+    "prefix": "acquire_input",
+    "body": [
+      "msg.post(\".\", \"acquire_input_focus\")",
+      "$0"
+    ],
+    "description": "Acquire input focus"
+  },
+  "Collision Response": {
+    "prefix": "collision_response",
+    "body": [
+      "function on_message(self, message_id, message, sender)",
+      "    if message_id == hash(\"collision_response\") then",
+      "        local group = message.other_group",
+      "        if group == hash(\"${1:enemy}\") then",
+      "            $0",
+      "        end",
+      "    end",
+      "end"
+    ],
+    "description": "Handle collision"
+  },
+  "Contact Point Response": {
+    "prefix": "contact_point_response",
+    "body": [
+      "function on_message(self, message_id, message, sender)",
+      "    if message_id == hash(\"contact_point_response\") then",
+      "        local normal = message.normal",
+      "        $0",
+      "    end",
+      "end"
+    ],
+    "description": "Handle contact point"
+  },
+  "Lua Module": {
+    "prefix": "module",
+    "body": [
+      "local M = {}",
+      "",
+      "function M.${1:function_name}(${2:args})",
+      "    $0",
+      "end",
+      "",
+      "return M"
+    ],
+    "description": "Lua module template"
+  },
+  "Property Annotation": {
+    "prefix": "property",
+    "body": [
+      "go.property(\"${1:name}\", ${2:value})"
+    ],
+    "description": "Define a script property"
+  },
+  "Class Annotation": {
+    "prefix": "class",
+    "body": [
+      "---@class ${1:script_name} : script_instance",
+      "---@field ${2:property_name} ${3:type} @${4:description}"
+    ],
+    "description": "Annotate script class with fields"
+  },
+  "Field Annotation": {
+    "prefix": "field",
+    "body": [
+      "---@field ${1:name} ${2:type} @${3:description}"
+    ],
+    "description": "Add a field annotation"
+  },
+  "Self Type Annotation": {
+    "prefix": "selftype",
+    "body": [
+      "---@param self ${1:script_name}"
+    ],
+    "description": "Annotate self parameter type"
+  },
+  "Script Template with Properties": {
+    "prefix": "script_template",
+    "body": [
+      "-- 1. Define your properties",
+      "go.property(\"${1:property1}\", ${2:100})",
+      "go.property(\"${3:property2}\", ${4:vmath.vector3()})",
+      "",
+      "-- 2. Annotate the script class",
+      "---@class ${5:my_script} : script_instance",
+      "---@field ${1:property1} ${6:number}",
+      "---@field ${3:property2} ${7:vector3}",
+      "",
+      "-- 3. Add type to self in each function",
+      "---@param self ${5:my_script}",
+      "function init(self)",
+      "    -- Now self.${1:property1} and self.${3:property2} have autocomplete!",
+      "    $0",
+      "end",
+      "",
+      "---@param self ${5:my_script}",
+      "---@param dt number",
+      "function update(self, dt)",
+      "    ",
+      "end",
+      "",
+      "---@param self ${5:my_script}",
+      "function final(self)",
+      "    ",
+      "end"
+    ],
+    "description": "Complete script with property type annotations"
+  }
+}
+

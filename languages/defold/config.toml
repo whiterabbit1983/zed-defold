@@ -1,4 +1,4 @@
-name = "Defold"
+﻿name = "Defold"
 grammar = "lua"
 path_suffixes = ["script", "gui_script", "render_script", "lua"]
 file_types = ["script", "gui_script", "render_script", "lua"]
@@ -13,3 +13,8 @@ brackets = [
 
 [language_servers.lua-language-server]
 name = "lua-language-server"
+
+# Note: Zed extensions do NOT support snippets in config.toml
+# Snippets must be installed separately by users
+# See SNIPPETS_INSTALL.md for instructions
+

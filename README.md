@@ -91,7 +91,15 @@ See [`DEFOLD_SETUP.md`](DEFOLD_SETUP.md) for detailed setup instructions.
 
 ## Code Snippets
 
-The extension includes 20+ code snippets for common Defold patterns. Just start typing and use autocomplete:
+**Note:** Zed extensions do NOT support bundled snippets. Install them separately using the provided script.
+
+### Quick Install Snippets
+
+```powershell
+.\install-snippets.ps1
+```
+
+The extension provides 26 code snippets for common Defold patterns:
 
 ### Lifecycle Functions
 - `init` - Initialize script
@@ -110,7 +118,6 @@ The extension includes 20+ code snippets for common Defold patterns. Just start 
 ### Common Patterns
 - `factory_create` - Create object from factory
 - `go_animate` - Animate game object
-- `gui_animate` - Animate GUI node
 - `msg_post` - Post message
 - `go_property` - Define script property
 - `timer_delay` - Create timer
@@ -119,6 +126,19 @@ The extension includes 20+ code snippets for common Defold patterns. Just start 
 - `collision_response` - Handle collision
 - `contact_point_response` - Handle contact point
 - `module` - Lua module template
+
+### GUI Functions
+- `gui_init` - GUI initialization
+- `gui_on_message` - GUI message handling
+- `gui_on_input` - GUI input handling
+- `gui_animate` - Animate GUI node
+
+### Property Annotations
+- `property` - Define script property
+- `class` - Annotate script class
+- `field` - Add field annotation
+- `selftype` - Annotate self parameter
+- `script_template` - Complete script with properties
 
 ### Usage Example
 
@@ -278,9 +298,12 @@ See **[COMPARISON_WITH_VSCODE.md](COMPARISON_WITH_VSCODE.md)** for detailed comp
 
 ### Snippets not appearing
 
-- Snippets appear in autocomplete as you type
-- Make sure you're in a Defold script file (`.script`, `.gui_script`, etc.)
-- Try typing the full prefix (e.g., `init`) and wait for autocomplete to appear
+- **Install snippets first**: Run `.\install-snippets.ps1`
+- Snippets must be in `%APPDATA%\Zed\snippets\defold.json` (Windows)
+- The file must be named `defold.json` to match the language name
+- Restart Zed after installation
+- Type the full prefix (e.g., `init`) and press `Tab`
+- See `SNIPPETS_INSTALL.md` for detailed instructions
 
 ### Defold API not recognized
 

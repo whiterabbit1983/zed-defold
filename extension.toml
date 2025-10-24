@@ -1,6 +1,6 @@
 id = "defold"
 name = "Defold"
-description = "Defold game engine support with bundled API docs, Lua language server, and 20+ code snippets"
+description = "Defold game engine support with bundled API docs, Lua language server, and code snippets"
 version = "0.1.0"
 schema_version = 1
 authors = ["Dmitry Paramonov <asmatic075@gmail.com>"]
