@@ -2,9 +2,32 @@ use zed_extension_api::{self as zed, LanguageServerId, Result};
 
 struct DefoldExtension {
     cached_binary_path: Option<String>,
+    annotations_downloaded: bool,
 }
 
+const ANNOTATIONS_REPO: &str = "https://github.com/astrochili/defold-annotations/archive/refs/heads/main.zip";
+
 impl DefoldExtension {
+    fn ensure_annotations(&mut self) -> Result<String> {
+        let annotations_dir = "defold-annotations";
+        
+        // Only download once per extension lifecycle
+        if !self.annotations_downloaded {
+            // Download and extract annotations (Zed will skip if already exists)
+            if let Err(e) = zed::download_file(
+                ANNOTATIONS_REPO,
+                annotations_dir,
+                zed::DownloadedFileType::Zip,
+            ) {
+                // If download fails, still try to use existing annotations
+                eprintln!("Failed to download annotations: {}", e);
+            }
+            self.annotations_downloaded = true;
+        }
+        
+        Ok(annotations_dir.to_string())
+    }
+    
     fn language_server_binary_path(
         &mut self,
         language_server_id: &LanguageServerId,
@@ -25,7 +48,7 @@ impl DefoldExtension {
             &zed::LanguageServerInstallationStatus::CheckingForUpdate,
         );
         let release = zed::latest_github_release(
-            "defold/lua-language-server",
+            "LuaLS/lua-language-server",
             zed::GithubReleaseOptions {
                 require_assets: true,
                 pre_release: false,
@@ -104,6 +127,7 @@ impl zed::Extension for DefoldExtension {
     fn new() -> Self {
         Self {
             cached_binary_path: None,
+            annotations_downloaded: false,
         }
     }
 
@@ -124,8 +148,9 @@ impl zed::Extension for DefoldExtension {
         _language_server_id: &LanguageServerId,
         _worktree: &zed::Worktree,
     ) -> Result<Option<zed::serde_json::Value>> {
-        // Defold's Language Server fork has built-in Defold API support
-        // We just need to configure it for Lua 5.1 and enable features
+        // Ensure annotations are downloaded
+        let annotations_path = self.ensure_annotations()?;
+        
         let initialization_options = zed::serde_json::json!({
             "Lua": {
                 "runtime": {
@@ -135,11 +160,30 @@ impl zed::Extension for DefoldExtension {
                     }
                 },
                 "diagnostics": {
+                    "globals": [
+                        // Defold core modules
+                        "go", "msg", "gui", "sys", "sound", "sprite", "physics",
+                        "particlefx", "tilemap", "label", "model", "spine", "camera",
+                        "collectionfactory", "factory", "collectionproxy",
+                        
+                        // Math and utilities
+                        "vmath", "hash", "pprint", "json", "image", "zlib",
+                        
+                        // System and lifecycle
+                        "crash", "profiler", "resource", "timer", "http",
+                        
+                        // Rendering
+                        "render", "matrix4", "vector3", "vector4", "quat",
+                        
+                        // Extensions and platform
+                        "webview", "push", "iap", "iac", "buffer", "socket",
+                        "html5", "facebook", "crashlytics"
+                    ],
                     "disable": ["lowercase-global", "trailing-space"]
                 },
                 "workspace": {
                     "checkThirdParty": false,
-                    "library": [],
+                    "library": [annotations_path],
                     "ignoreDir": [".defold", "build"]
                 },
                 "completion": {
@@ -168,14 +212,29 @@ impl zed::Extension for DefoldExtension {
         _language_server_id: &LanguageServerId,
         _worktree: &zed::Worktree,
     ) -> Result<Option<zed::serde_json::Value>> {
-        // Defold's fork includes Defold APIs by default
+        // Use the same annotations path
+        let annotations_path = "defold-annotations";
+        
         let workspace_config = zed::serde_json::json!({
             "Lua": {
                 "runtime": {
                     "version": "Lua 5.1"
                 },
+                "diagnostics": {
+                    "globals": [
+                        "go", "msg", "gui", "sys", "sound", "sprite", "physics",
+                        "particlefx", "tilemap", "label", "model", "spine", "camera",
+                        "collectionfactory", "factory", "collectionproxy",
+                        "vmath", "hash", "pprint", "json", "image", "zlib",
+                        "crash", "profiler", "resource", "timer", "http",
+                        "render", "matrix4", "vector3", "vector4", "quat",
+                        "webview", "push", "iap", "iac", "buffer", "socket",
+                        "html5", "facebook", "crashlytics"
+                    ]
+                },
                 "workspace": {
                     "checkThirdParty": false,
+                    "library": [annotations_path],
                     "ignoreDir": [".defold", "build"]
                 },
                 "completion": {

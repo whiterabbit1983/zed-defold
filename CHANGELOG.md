@@ -9,19 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Initial release of Defold extension for Zed
-- **Completely self-contained** - no external dependencies or borrowed files
-- **Defold Language Server Integration**:
-  - Uses [Defold's official Lua Language Server fork](https://github.com/defold/lua-language-server)
-  - Complete Defold API documentation built-in (no manual setup required!)
+- **Automatic Defold API Annotations**:
+  - Auto-downloads [astrochili/defold-annotations](https://github.com/astrochili/defold-annotations) on first use
+  - Same approach as [VSCode Defold extension](https://github.com/astrochili/vscode-defold)
+  - No manual setup required - works immediately!
+  - Annotations cached after first download
+- **Complete Autocomplete Features**:
   - Full function signatures with parameter types
-  - Hover documentation for all Defold functions
-  - Automatic installation and configuration
-- **Advanced Autocomplete Features**:
-  - Function name completion for all Defold modules (go, msg, gui, vmath, etc.)
-  - Parameter hints while typing
-  - Type checking and inference
+  - Hover documentation with descriptions
+  - Parameter hints while typing (`@param` tags)
+  - Type information for all Defold types
+  - Function name completion for 40+ Defold modules
   - Go-to-definition and find references
   - No "undefined global" warnings
+- **Lua Language Server Integration**:
+  - Automatic configuration for Defold projects
+  - Custom initialization with annotations path
+  - Workspace configuration with Lua 5.1
+  - Support for type hints and parameter info
 - Support for `.script`, `.gui_script`, `.render_script`, and `.lua` file types
 - Syntax highlighting using bundled tree-sitter Lua grammar
 - Complete language support files:
@@ -41,9 +46,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Enhanced README with feature highlights
 
 ### Key Technologies
-- Based on patterns from [vscode-defold](https://github.com/astrochili/vscode-defold)
+- Inspired by [astrochili/vscode-defold](https://github.com/astrochili/vscode-defold)
+- Annotations from [astrochili/defold-annotations](https://github.com/astrochili/defold-annotations)
 - Uses Lua grammar from [tree-sitter-grammars/tree-sitter-lua](https://github.com/tree-sitter-grammars/tree-sitter-lua)
-- **Language server from [defold/lua-language-server](https://github.com/defold/lua-language-server)** - Defold's official fork with built-in API support
+- Language server from [LuaLS/lua-language-server](https://github.com/LuaLS/lua-language-server)
 
 ## Future Improvements
 

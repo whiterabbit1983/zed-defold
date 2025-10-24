@@ -6,11 +6,11 @@ A Defold game engine extension for the Zed editor that provides Lua language sup
 
 - **🎁 Self-Contained**: All files bundled - no external dependencies or borrowed files from other extensions
 - **🎨 Syntax Highlighting**: Full Lua syntax highlighting for all Defold script types
-- **🤖 Defold Language Server**: Uses [Defold's official Language Server fork](https://github.com/defold/lua-language-server)
-  - Complete Defold API documentation built-in
-  - Function signatures with parameter types
+- **🤖 Lua Language Server**: Auto-configured for Defold
+  - Automatically downloads [Defold API annotations](https://github.com/astrochili/defold-annotations)
+  - Complete function signatures with parameter types
   - Hover documentation for all Defold functions
-  - No additional setup required!
+  - No setup required - works like VSCode Defold extension!
 - **📚 Advanced Features**:
   - Go-to-definition
   - Find references
@@ -32,28 +32,30 @@ This extension recognizes the following Defold file types:
 
 ## 🚀 Autocomplete Features
 
-### Built-in with Defold Language Server
-The extension uses **[Defold's official Lua Language Server fork](https://github.com/defold/lua-language-server)** which includes:
+### Automatic Defold API Annotations
+The extension automatically downloads and configures [Defold API annotations](https://github.com/astrochili/defold-annotations) on first use - just like the VSCode Defold extension!
 
-✅ **Complete Defold API documentation built-in:**
+✅ **Complete API documentation:**
 ```lua
-go.     -- Full API: get_position, set_position, animate, etc.
-msg.    -- Full API: post, url, etc.
-vmath.  -- Full API: vector3, quat, matrix4, etc.
-gui.    -- Full API: get_node, animate, set_text, etc.
+go.     -- Full API with signatures and types
+msg.    -- Complete messaging API
+vmath.  -- Vector math with type information
+gui.    -- GUI functions with parameter docs
+// ... all 40+ Defold modules!
 ```
 
-✅ **Hover for documentation:**
-- Hover over any Defold function to see its signature and description
-- Parameter types and descriptions included
-- No additional setup required!
-
-✅ **Advanced features:**
+✅ **Full Features (work automatically):**
 - Function signatures with parameter types
-- Parameter hints while typing  
+- Hover documentation with descriptions
+- Parameter hints while typing
 - Type checking
-- Go-to-definition
-- Find references
+- No "undefined global" warnings
+- No manual setup required!
+
+**First-time use:** Annotations download automatically (5-10 seconds), then you're ready to go!
+
+### No Defold Binary Required
+Unlike some editors, you don't need to configure a Defold binary path for autocomplete. The extension downloads annotations directly from GitHub and works immediately. Build and test in Defold Editor as usual!
 
 ## Code Snippets
 
@@ -217,6 +219,16 @@ cargo build --release --target wasm32-wasip1
 3. Restart Zed
 
 4. Make changes and rebuild as needed
+
+## Comparison with VSCode Extension
+
+This extension focuses on **coding experience** (autocomplete, documentation):
+- ✅ Same autocomplete quality as VSCode Defold extension
+- ✅ No Defold binary path needed
+- ✅ Zero configuration
+- ❌ No build/bundle features (use Defold Editor for that)
+
+See **[COMPARISON_WITH_VSCODE.md](COMPARISON_WITH_VSCODE.md)** for detailed comparison.
 
 ## Troubleshooting
 

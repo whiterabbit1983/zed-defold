@@ -9,5 +9,5 @@ keywords = ["defold", "lua", "game-development", "game-engine"]
 
 [language_servers.lua-language-server]
 name = "Lua Language Server"
-language = "Lua"
+language = "Defold"
 

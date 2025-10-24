@@ -5,6 +5,10 @@ Cargo.lock
 !grammars/*.wasm
 lua-language-server-*/
 
+# Defold annotations (downloaded automatically)
+defold-annotations/
+annotations-temp/
+
 # Test and debug files
 test*.script
 *_test.script
