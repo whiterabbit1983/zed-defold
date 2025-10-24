@@ -1,0 +1,14 @@
+target/
+Cargo.lock
+# Ignore compiled WASM except for bundled grammar
+*.wasm
+!grammars/*.wasm
+lua-language-server-*/
+
+# Test and debug files
+test*.script
+*_test.script
+TEST_*.md
+DEBUG_*.md
+WHATS_*.md
+

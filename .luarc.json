@@ -1,0 +1,63 @@
+{
+  "$schema": "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
+  "runtime.version": "Lua 5.1",
+  "runtime.special": {
+    "include": "require"
+  },
+  "workspace.checkThirdParty": false,
+  "workspace.library": [
+    "${3rd}/luassert/library"
+  ],
+  "diagnostics.globals": [
+    "go",
+    "msg",
+    "gui",
+    "sys",
+    "sound",
+    "sprite",
+    "physics",
+    "particlefx",
+    "tilemap",
+    "label",
+    "model",
+    "spine",
+    "camera",
+    "factory",
+    "collectionfactory",
+    "collectionproxy",
+    "render",
+    "vmath",
+    "matrix4",
+    "vector3",
+    "vector4",
+    "quat",
+    "hash",
+    "pprint",
+    "json",
+    "image",
+    "zlib",
+    "crash",
+    "profiler",
+    "resource",
+    "timer",
+    "http",
+    "socket",
+    "html5",
+    "webview",
+    "push",
+    "iap",
+    "iac",
+    "buffer",
+    "facebook",
+    "crashlytics"
+  ],
+  "diagnostics.disable": [
+    "lowercase-global",
+    "trailing-space"
+  ],
+  "completion.keywordSnippet": "Both",
+  "completion.callSnippet": "Both",
+  "hint.enable": true,
+  "hint.setType": true
+}
+

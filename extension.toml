@@ -1,0 +1,13 @@
+id = "defold"
+name = "Defold"
+description = "Defold game engine support with Lua language server, syntax highlighting, and 20+ code snippets"
+version = "0.1.0"
+schema_version = 1
+authors = ["Your Name <your.email@example.com>"]
+repository = "https://github.com/yourusername/zed-defold"
+keywords = ["defold", "lua", "game-development", "game-engine"]
+
+[language_servers.lua-language-server]
+name = "Lua Language Server"
+language = "Lua"
+

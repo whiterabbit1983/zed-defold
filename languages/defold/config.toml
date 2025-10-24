@@ -1,0 +1,15 @@
+name = "Defold"
+grammar = "lua"
+path_suffixes = ["script", "gui_script", "render_script", "lua"]
+file_types = ["script", "gui_script", "render_script", "lua"]
+line_comments = ["-- "]
+block_comment = ["--[[", "]]"]
+autoclose_before = ",)]}:;>="
+brackets = [
+  { start = "(", end = ")", close = true, newline = false },
+  { start = "[", end = "]", close = true, newline = false },
+  { start = "{", end = "}", close = true, newline = true },
+]
+
+[language_servers.lua-language-server]
+name = "lua-language-server"
