@@ -1,31 +1,36 @@
-use zed_extension_api::{self as zed, LanguageServerId, Result};
+use zed_extension_api::{self as zed, serde_json, LanguageServerId, Result};
 
 struct DefoldExtension {
     cached_binary_path: Option<String>,
-    annotations_downloaded: bool,
+    api_path: Option<String>,
 }
 
-const ANNOTATIONS_REPO: &str = "https://github.com/astrochili/defold-annotations/archive/refs/heads/main.zip";
-
 impl DefoldExtension {
-    fn ensure_annotations(&mut self) -> Result<String> {
-        let annotations_dir = "defold-annotations";
-        
-        // Only download once per extension lifecycle
-        if !self.annotations_downloaded {
-            // Download and extract annotations (Zed will skip if already exists)
-            if let Err(e) = zed::download_file(
-                ANNOTATIONS_REPO,
-                annotations_dir,
-                zed::DownloadedFileType::Zip,
-            ) {
-                // If download fails, still try to use existing annotations
-                eprintln!("Failed to download annotations: {}", e);
-            }
-            self.annotations_downloaded = true;
+    fn get_api_path(&mut self, _language_server_id: &LanguageServerId) -> String {
+        if let Some(path) = &self.api_path {
+            return path.clone();
         }
         
-        Ok(annotations_dir.to_string())
+        // The language server binary is at: extensions/work/defold/lua-language-server-X.Y.Z/bin/lua-language-server.exe
+        // We need to get the extension directory path from the binary path
+        if let Some(binary_path) = &self.cached_binary_path {
+            // Extract extension directory from binary path
+            // e.g., "C:/Users/.../extensions/work/defold/lua-language-server-3.15.0/bin/lua-language-server.exe"
+            // We want "C:/Users/.../extensions/work/defold/api"
+            if let Some(defold_idx) = binary_path.rfind("defold") {
+                let base_path = &binary_path[..defold_idx + 6]; // Include "defold"
+                // Use the same separator as in the binary path (backslash on Windows)
+                let separator = if binary_path.contains('\\') { "\\" } else { "/" };
+                let api_path = format!("{}{}api", base_path, separator);
+                self.api_path = Some(api_path.clone());
+                return api_path;
+            }
+        }
+        
+        // Fallback to relative path
+        let api_path = "api".to_string();
+        self.api_path = Some(api_path.clone());
+        api_path
     }
     
     fn language_server_binary_path(
@@ -127,7 +132,7 @@ impl zed::Extension for DefoldExtension {
     fn new() -> Self {
         Self {
             cached_binary_path: None,
-            annotations_downloaded: false,
+            api_path: None,
         }
     }
 
@@ -145,11 +150,17 @@ impl zed::Extension for DefoldExtension {
 
     fn language_server_initialization_options(
         &mut self,
-        _language_server_id: &LanguageServerId,
+        language_server_id: &LanguageServerId,
         _worktree: &zed::Worktree,
     ) -> Result<Option<zed::serde_json::Value>> {
-        // Ensure annotations are downloaded
-        let annotations_path = self.ensure_annotations()?;
+        // Use bundled API annotations with absolute path
+        let api_path = self.get_api_path(language_server_id);
+        
+        let workspace_config = serde_json::json!({
+            "checkThirdParty": false,
+            "library": [api_path],
+            "ignoreDir": [".defold", "build"]
+        });
         
         let initialization_options = zed::serde_json::json!({
             "Lua": {
@@ -161,6 +172,9 @@ impl zed::Extension for DefoldExtension {
                 },
                 "diagnostics": {
                     "globals": [
+                        // Script lifecycle functions
+                        "init", "final", "update", "fixed_update", "on_input", "on_message", "on_reload",
+                        
                         // Defold core modules
                         "go", "msg", "gui", "sys", "sound", "sprite", "physics",
                         "particlefx", "tilemap", "label", "model", "spine", "camera",
@@ -179,13 +193,9 @@ impl zed::Extension for DefoldExtension {
                         "webview", "push", "iap", "iac", "buffer", "socket",
                         "html5", "facebook", "crashlytics"
                     ],
-                    "disable": ["lowercase-global", "trailing-space"]
+                    "disable": ["lowercase-global", "undefined-global", "trailing-space"]
                 },
-                "workspace": {
-                    "checkThirdParty": false,
-                    "library": [annotations_path],
-                    "ignoreDir": [".defold", "build"]
-                },
+                "workspace": workspace_config,
                 "completion": {
                     "keywordSnippet": "Both",
                     "callSnippet": "Both",
@@ -209,19 +219,22 @@ impl zed::Extension for DefoldExtension {
 
     fn language_server_workspace_configuration(
         &mut self,
-        _language_server_id: &LanguageServerId,
+        language_server_id: &LanguageServerId,
         _worktree: &zed::Worktree,
     ) -> Result<Option<zed::serde_json::Value>> {
-        // Use the same annotations path
-        let annotations_path = "defold-annotations";
+        // Use bundled API annotations with absolute path
+        let api_path = self.get_api_path(language_server_id);
         
-        let workspace_config = zed::serde_json::json!({
+        let workspace_config = serde_json::json!({
             "Lua": {
                 "runtime": {
                     "version": "Lua 5.1"
                 },
                 "diagnostics": {
                     "globals": [
+                        // Script lifecycle functions
+                        "init", "final", "update", "fixed_update", "on_input", "on_message", "on_reload",
+                        
                         "go", "msg", "gui", "sys", "sound", "sprite", "physics",
                         "particlefx", "tilemap", "label", "model", "spine", "camera",
                         "collectionfactory", "factory", "collectionproxy",
@@ -230,11 +243,12 @@ impl zed::Extension for DefoldExtension {
                         "render", "matrix4", "vector3", "vector4", "quat",
                         "webview", "push", "iap", "iac", "buffer", "socket",
                         "html5", "facebook", "crashlytics"
-                    ]
+                    ],
+                    "disable": ["lowercase-global", "undefined-global", "trailing-space"]
                 },
                 "workspace": {
                     "checkThirdParty": false,
-                    "library": [annotations_path],
+                    "library": [api_path],
                     "ignoreDir": [".defold", "build"]
                 },
                 "completion": {

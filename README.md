@@ -6,11 +6,11 @@ A Defold game engine extension for the Zed editor that provides Lua language sup
 
 - **🎁 Self-Contained**: All files bundled - no external dependencies or borrowed files from other extensions
 - **🎨 Syntax Highlighting**: Full Lua syntax highlighting for all Defold script types
-- **🤖 Lua Language Server**: Auto-configured for Defold
-  - Automatically downloads [Defold API annotations](https://github.com/astrochili/defold-annotations)
+- **🤖 Lua Language Server**: Auto-configured for Defold with bundled API annotations
+  - **Bundled Defold API documentation** - works immediately after install
   - Complete function signatures with parameter types
   - Hover documentation for all Defold functions
-  - No setup required - works like VSCode Defold extension!
+  - No downloads, no setup, no configuration!
 - **📚 Advanced Features**:
   - Go-to-definition
   - Find references
@@ -32,30 +32,46 @@ This extension recognizes the following Defold file types:
 
 ## 🚀 Autocomplete Features
 
-### Automatic Defold API Annotations
-The extension automatically downloads and configures [Defold API annotations](https://github.com/astrochili/defold-annotations) on first use - just like the VSCode Defold extension!
+The extension includes **bundled Defold API annotations** that work automatically:
 
-✅ **Complete API documentation:**
+✅ **Works out of the box:**
+- Function signatures with parameter types
+- Hover documentation for Defold functions
+- Parameter hints while typing
+- No errors on lifecycle functions (`init`, `update`, etc.)
+- No "undefined global" warnings for Defold modules
+- Full autocomplete for core APIs:
+  - `go.*` - Game object functions (get_position, set_position, animate, etc.)
+  - `msg.*` - Message passing (msg.post, msg.url, etc.)
+  - `vmath.*` - Vector math (vector3, quat, lerp, normalize, etc.)
+  - `gui.*` - GUI functions (get_node, animate, set_text, etc.)
+  - `sprite.*` - Sprite functions (play_flipbook, set_constant, etc.)
+  - `physics.*` - Physics functions (raycast, get_gravity, etc.)
+  - `sys.*` - System functions (get_sys_info, load_resource, etc.)
+  - `hash()` - Hash function
+
+### Example Autocomplete
+
 ```lua
-go.     -- Full API with signatures and types
-msg.    -- Complete messaging API
-vmath.  -- Vector math with type information
-gui.    -- GUI functions with parameter docs
-// ... all 40+ Defold modules!
+function init(self)
+    -- Type "go." and see all game object functions with docs:
+    local pos = go.get_position()  -- ✅ Shows signature and parameters
+    
+    -- Type "msg." for messaging:
+    msg.post("#", "my_message")  -- ✅ Shows parameter info
+    
+    -- Type "vmath." for math:
+    local v = vmath.vector3(1, 2, 3)  -- ✅ Type hints included
+    
+    -- Hover over any function for documentation!
+end
 ```
 
-✅ **Full Features (work automatically):**
-- Function signatures with parameter types
-- Hover documentation with descriptions
-- Parameter hints while typing
-- Type checking
-- No "undefined global" warnings
-- No manual setup required!
-
-**First-time use:** Annotations download automatically (5-10 seconds), then you're ready to go!
-
-### No Defold Binary Required
-Unlike some editors, you don't need to configure a Defold binary path for autocomplete. The extension downloads annotations directly from GitHub and works immediately. Build and test in Defold Editor as usual!
+### No Setup Required
+- ✅ No Defold binary path needed
+- ✅ No external downloads
+- ✅ No configuration files
+- ✅ Just install and start coding!
 
 ## Code Snippets
 

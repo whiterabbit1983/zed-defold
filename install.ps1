@@ -45,6 +45,10 @@ Copy-Item -Path "grammars\lua.wasm" -Destination "$ExtensionDir\grammars\lua.was
 Write-Host "Copying language configuration..."
 Copy-Item -Path "languages" -Destination $ExtensionDir -Recurse -Force
 
+# Copy bundled API annotations
+Write-Host "Copying bundled Defold API annotations..."
+Copy-Item -Path "api" -Destination $ExtensionDir -Recurse -Force
+
 Write-Host "`nInstallation complete!" -ForegroundColor Green
 Write-Host "Extension installed to: $ExtensionDir" -ForegroundColor Cyan
 Write-Host "`nAll files are self-contained - no external dependencies!" -ForegroundColor Green
