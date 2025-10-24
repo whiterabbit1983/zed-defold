@@ -4,6 +4,12 @@
 ---@class go
 go = {}
 
+---Define a script property
+---@param name string @property name
+---@param value any @default value
+---@return any @property accessor
+function go.property(name, value) end
+
 ---Get the position of a game object
 ---@param id string|hash|url|nil @optional id of the game object
 ---@return vector3 @the position
@@ -71,6 +77,36 @@ function go.set(url, property, value) end
 ---@param id string|hash|url|nil @optional id of the game object
 ---@return hash @id of the parent, or nil if no parent
 function go.get_parent(id) end
+
+---Get the world transform of a game object
+---@param id string|hash|url|nil @optional id of the game object
+---@return matrix4 @world transform matrix
+function go.get_world_transform(id) end
+
+---Get the world position of a game object
+---@param id string|hash|url|nil @optional id of the game object
+---@return vector3 @world position
+function go.get_world_position(id) end
+
+---Get the world rotation of a game object
+---@param id string|hash|url|nil @optional id of the game object
+---@return quaternion @world rotation
+function go.get_world_rotation(id) end
+
+---Get the world scale of a game object
+---@param id string|hash|url|nil @optional id of the game object
+---@return vector3 @world scale
+function go.get_world_scale(id) end
+
+---Check if a game object exists
+---@param id string|hash|url|nil @optional id of the game object
+---@return boolean @true if exists
+function go.exists(id) end
+
+---Get the id of a game object
+---@param path string|nil @optional path to game object
+---@return hash @id of the game object
+function go.get_id(path) end
 
 return go
 
