@@ -73,6 +73,22 @@ end
 - ✅ No configuration files
 - ✅ Just install and start coding!
 
+## Build Tasks
+
+While Zed extensions don't support custom commands (yet), you can use **Zed's task system** to run Defold build commands:
+
+1. Copy `tasks-template.json` from this repo to `.zed/tasks.json` in your Defold project
+2. Set up environment variables (see `DEFOLD_SETUP.md`)
+3. Run tasks via `Ctrl+Shift+P` → "task: spawn"
+
+Available tasks:
+- **Resolve Dependencies** - Download project dependencies
+- **Clean Build** - Clean the build folder  
+- **Build** - Build the project
+- **Bundle** - Bundle for HTML5, Windows, macOS, Linux, Android, iOS
+
+See [`DEFOLD_SETUP.md`](DEFOLD_SETUP.md) for detailed setup instructions.
+
 ## Code Snippets
 
 The extension includes 20+ code snippets for common Defold patterns. Just start typing and use autocomplete:

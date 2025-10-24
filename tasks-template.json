@@ -1,0 +1,160 @@
+{
+  // Defold build tasks for Zed
+  // Copy this file to your Defold project as .zed/tasks.json
+  // Tasks can be run via: Ctrl+Shift+P -> "task: spawn"
+  
+  "tasks": [
+    {
+      "label": "Defold: Resolve Dependencies",
+      "command": "java",
+      "args": [
+        "-jar",
+        "${BOB_JAR}",
+        "--email", "${DEFOLD_EMAIL}",
+        "--auth", "${DEFOLD_AUTH}",
+        "resolve"
+      ],
+      "cwd": "${ZED_WORKTREE_ROOT}",
+      "reveal": "always",
+      "hide": "never"
+    },
+    {
+      "label": "Defold: Clean Build",
+      "command": "java",
+      "args": [
+        "-jar",
+        "${BOB_JAR}",
+        "distclean"
+      ],
+      "cwd": "${ZED_WORKTREE_ROOT}",
+      "reveal": "always"
+    },
+    {
+      "label": "Defold: Build",
+      "command": "java",
+      "args": [
+        "-jar",
+        "${BOB_JAR}",
+        "--email", "${DEFOLD_EMAIL}",
+        "--auth", "${DEFOLD_AUTH}",
+        "build"
+      ],
+      "cwd": "${ZED_WORKTREE_ROOT}",
+      "reveal": "always"
+    },
+    {
+      "label": "Defold: Bundle for HTML5",
+      "command": "java",
+      "args": [
+        "-jar",
+        "${BOB_JAR}",
+        "--email", "${DEFOLD_EMAIL}",
+        "--auth", "${DEFOLD_AUTH}",
+        "--platform", "js-web",
+        "--bundle-output", "build/bundle",
+        "--variant", "debug",
+        "resolve",
+        "build",
+        "bundle"
+      ],
+      "cwd": "${ZED_WORKTREE_ROOT}",
+      "reveal": "always"
+    },
+    {
+      "label": "Defold: Bundle for Windows",
+      "command": "java",
+      "args": [
+        "-jar",
+        "${BOB_JAR}",
+        "--email", "${DEFOLD_EMAIL}",
+        "--auth", "${DEFOLD_AUTH}",
+        "--platform", "x86_64-win32",
+        "--bundle-output", "build/bundle",
+        "--variant", "debug",
+        "resolve",
+        "build",
+        "bundle"
+      ],
+      "cwd": "${ZED_WORKTREE_ROOT}",
+      "reveal": "always"
+    },
+    {
+      "label": "Defold: Bundle for macOS",
+      "command": "java",
+      "args": [
+        "-jar",
+        "${BOB_JAR}",
+        "--email", "${DEFOLD_EMAIL}",
+        "--auth", "${DEFOLD_AUTH}",
+        "--platform", "arm64-macos",
+        "--bundle-output", "build/bundle",
+        "--variant", "debug",
+        "resolve",
+        "build",
+        "bundle"
+      ],
+      "cwd": "${ZED_WORKTREE_ROOT}",
+      "reveal": "always"
+    },
+    {
+      "label": "Defold: Bundle for Linux",
+      "command": "java",
+      "args": [
+        "-jar",
+        "${BOB_JAR}",
+        "--email", "${DEFOLD_EMAIL}",
+        "--auth", "${DEFOLD_AUTH}",
+        "--platform", "x86_64-linux",
+        "--bundle-output", "build/bundle",
+        "--variant", "debug",
+        "resolve",
+        "build",
+        "bundle"
+      ],
+      "cwd": "${ZED_WORKTREE_ROOT}",
+      "reveal": "always"
+    },
+    {
+      "label": "Defold: Bundle for Android",
+      "command": "java",
+      "args": [
+        "-jar",
+        "${BOB_JAR}",
+        "--email", "${DEFOLD_EMAIL}",
+        "--auth", "${DEFOLD_AUTH}",
+        "--platform", "arm64-android",
+        "--bundle-output", "build/bundle",
+        "--variant", "debug",
+        "--keystore", "${ANDROID_KEYSTORE}",
+        "--keystore-pass", "${ANDROID_KEYSTORE_PASS}",
+        "--keystore-alias", "${ANDROID_KEYSTORE_ALIAS}",
+        "resolve",
+        "build",
+        "bundle"
+      ],
+      "cwd": "${ZED_WORKTREE_ROOT}",
+      "reveal": "always"
+    },
+    {
+      "label": "Defold: Bundle for iOS",
+      "command": "java",
+      "args": [
+        "-jar",
+        "${BOB_JAR}",
+        "--email", "${DEFOLD_EMAIL}",
+        "--auth", "${DEFOLD_AUTH}",
+        "--platform", "arm64-ios",
+        "--bundle-output", "build/bundle",
+        "--variant", "debug",
+        "--identity", "${IOS_IDENTITY}",
+        "--mobileprovisioning", "${IOS_PROVISIONING}",
+        "resolve",
+        "build",
+        "bundle"
+      ],
+      "cwd": "${ZED_WORKTREE_ROOT}",
+      "reveal": "always"
+    }
+  ]
+}
+
