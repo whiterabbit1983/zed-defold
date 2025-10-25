@@ -5,6 +5,7 @@ Write-Host "Installing Defold extension for Zed..." -ForegroundColor Green
 
 # Define paths
 $ExtensionDir = "$env:LOCALAPPDATA\Zed\extensions\installed\defold"
+$WorkDir = "$env:LOCALAPPDATA\Zed\extensions\work"
 
 # Check if build exists
 if (-not (Test-Path "target\wasm32-wasip1\release\zed_defold.wasm")) {
@@ -48,6 +49,11 @@ Copy-Item -Path "languages" -Destination $ExtensionDir -Recurse -Force
 # Copy bundled API annotations
 Write-Host "Copying bundled Defold API annotations..."
 Copy-Item -Path "api" -Destination $ExtensionDir -Recurse -Force
+
+# Copy API files to extensions/work as well (just in case)
+Write-Host "Copying API files to extensions/work/defold..."
+New-Item -ItemType Directory -Force -Path "$WorkDir\defold\api" | Out-Null
+Copy-Item -Path "api\*.lua" -Destination "$WorkDir\defold\api" -Force
 
 Write-Host "`nInstallation complete!" -ForegroundColor Green
 Write-Host "Extension installed to: $ExtensionDir" -ForegroundColor Cyan

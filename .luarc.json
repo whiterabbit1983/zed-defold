@@ -6,7 +6,8 @@
   },
   "workspace.checkThirdParty": false,
   "workspace.library": [
-    "${3rd}/luassert/library"
+    "${3rd}/luassert/library",
+    "api"
   ],
   "diagnostics.globals": [
     "go",

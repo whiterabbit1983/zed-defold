@@ -5,6 +5,17 @@ All notable changes to the Defold extension for Zed will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2025-10-25
+
+### Changed
+- Installation script now copies API files to both `extensions/installed/defold` and `extensions/work/defold` directories for better compatibility
+
+## [0.1.1] - 2025-10-25
+
+### Fixed
+- Added Lua grammar repository configuration to extension.toml
+- Updated bundled Lua grammar binary (lua.wasm)
+
 ## [0.1.0] - 2025-10-24
 
 ### Added
