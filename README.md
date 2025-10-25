@@ -2,6 +2,55 @@
 
 A Defold game engine extension for the Zed editor that provides Lua language support for Defold script files.
 
+## 🚀 Installation
+
+### Using Zed's Built-in Extension Installer (Recommended)
+
+The easiest way to install this extension is to use Zed's "Install Dev Extension" feature, which handles compilation automatically:
+
+1. **Clone this repository**:
+```bash
+git clone https://github.com/whiterabbit1983/zed-defold.git
+cd zed-defold
+```
+
+2. **Open Zed and install the dev extension**:
+   - Press `Ctrl+Shift+P` (Windows/Linux) or `Cmd+Shift+P` (macOS)
+   - Type `zed: install dev extension`
+   - Select the command and navigate to this extension's directory
+   - Zed will automatically compile and install the extension
+
+3. **Done!** The extension will appear in your installed extensions list.
+
+> **Note**: Zed will automatically install the required `wasm32-wasip1` Rust target and compile the extension if needed. You can skip the manual steps below.
+
+### Manual Build and Installation (Advanced)
+
+If you prefer to build manually or Zed's auto-compilation doesn't work:
+
+1. **Install the WebAssembly target** (if not already installed):
+```bash
+rustup target add wasm32-wasip1
+```
+
+2. **Build the extension**:
+```bash
+cargo build --release --target wasm32-wasip1
+```
+
+This creates `target/wasm32-wasip1/release/zed_defold.wasm`
+
+3. **Install using Zed**:
+   - Press `Ctrl+Shift+P` (Windows/Linux) or `Cmd+Shift+P` (macOS)
+   - Type `zed: install dev extension`
+   - Navigate to this extension's directory
+   - Zed will register the pre-built extension
+
+### Prerequisites
+
+- [Rust](https://rustup.rs/) (latest stable version) - for manual builds
+- Zed editor installed
+
 ## Features
 
 - **🎁 Self-Contained**: All files bundled - no external dependencies or borrowed files from other extensions
@@ -20,7 +69,6 @@ A Defold game engine extension for the Zed editor that provides Lua language sup
 - **📁 File Type Recognition**: Automatic recognition of `.script`, `.gui_script`, `.render_script`, and `.lua` files
 - **🧩 Smart Editing**: Bracket matching, auto-closing, indentation, and code outline
 - **🌐 Cross-Platform**: Works on Windows, macOS, and Linux
-- **⚡ Easy Install**: One-command installation with `install.ps1`
 
 ## Supported File Types
 
@@ -148,85 +196,6 @@ function init(self)
     -- Initialization logic
 end
 ```
-
-## Building the Extension
-
-### Prerequisites
-
-- [Rust](https://rustup.rs/) (latest stable version)
-- Zed editor installed
-
-### Build Steps
-
-1. Clone or navigate to this repository:
-```bash
-cd zed_defold_ext
-```
-
-2. Add the WebAssembly target:
-```bash
-rustup target add wasm32-wasip1
-```
-
-3. Build the extension:
-```bash
-cargo build --release --target wasm32-wasip1
-```
-
-This will create a `.wasm` file in `target/wasm32-wasip1/release/zed_defold.wasm`
-
-### Installing the Extension
-
-#### Quick Install (Windows)
-
-Run the provided installation script:
-```powershell
-.\install.ps1
-```
-
-This is completely self-contained - no external dependencies needed!
-
-#### Manual Installation
-
-**Windows:**
-```powershell
-# Create the extension directory
-New-Item -ItemType Directory -Force -Path "$env:LOCALAPPDATA\Zed\extensions\installed\defold"
-
-# Copy the extension files
-Copy-Item -Path "target\wasm32-wasip1\release\zed_defold.wasm" -Destination "$env:LOCALAPPDATA\Zed\extensions\installed\defold\extension.wasm" -Force
-Copy-Item -Path "extension.toml" -Destination "$env:LOCALAPPDATA\Zed\extensions\installed\defold\extension.toml" -Force
-
-# Copy grammars (bundled in the project)
-New-Item -ItemType Directory -Force -Path "$env:LOCALAPPDATA\Zed\extensions\installed\defold\grammars"
-Copy-Item -Path "grammars\lua.wasm" -Destination "$env:LOCALAPPDATA\Zed\extensions\installed\defold\grammars\lua.wasm" -Force
-
-# Copy all language files (all bundled in the project)
-Copy-Item -Path "languages" -Destination "$env:LOCALAPPDATA\Zed\extensions\installed\defold\" -Recurse -Force
-```
-
-**macOS/Linux:**
-```bash
-# Create the extension directory
-mkdir -p ~/Library/Application\ Support/Zed/extensions/installed/defold  # macOS
-# or
-mkdir -p ~/.local/share/zed/extensions/installed/defold  # Linux
-
-# Copy the extension files (adjust path for Linux if needed)
-cp target/wasm32-wasip1/release/zed_defold.wasm ~/Library/Application\ Support/Zed/extensions/installed/defold/extension.wasm
-cp extension.toml ~/Library/Application\ Support/Zed/extensions/installed/defold/
-
-# Copy grammars (bundled in the project)
-mkdir -p ~/Library/Application\ Support/Zed/extensions/installed/defold/grammars
-cp grammars/lua.wasm ~/Library/Application\ Support/Zed/extensions/installed/defold/grammars/
-
-# Copy all language files (all bundled in the project)
-cp -r languages ~/Library/Application\ Support/Zed/extensions/installed/defold/
-```
-
-3. Restart Zed editor
-
-4. The extension should now be active. Open any `.script` or `.gui_script` file to test it.
 
 ## 📦 What's Included
 

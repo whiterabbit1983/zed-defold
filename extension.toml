@@ -1,7 +1,7 @@
 id = "defold"
 name = "Defold"
 description = "Defold game engine support with bundled API docs, Lua language server, and code snippets"
-version = "0.1.2"
+version = "0.1.3"
 schema_version = 1
 authors = ["Dmitry Paramonov <asmatic075@gmail.com>"]
 repository = "https://github.com/whiterabbit1983/zed-defold"

@@ -5,6 +5,17 @@ All notable changes to the Defold extension for Zed will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.3] - 2025-10-25
+
+### Changed
+- **Simplified Installation**: Removed `install.ps1` script in favor of using Zed's built-in "Install Dev Extension" feature
+- Updated README with clearer installation instructions
+- Moved installation section to the top of README for better visibility
+- Installation now uses Zed's native extension system, which automatically handles compilation
+
+### Removed
+- `install.ps1` - Installation script (replaced by Zed's native installer)
+
 ## [0.1.2] - 2025-10-25
 
 ### Changed
