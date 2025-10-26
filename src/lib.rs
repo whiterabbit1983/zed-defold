@@ -6,52 +6,83 @@ struct DefoldExtension {
 }
 
 impl DefoldExtension {
-    fn get_api_path(&mut self, language_server_id: &LanguageServerId, worktree: &zed::Worktree) -> Result<String> {
+    fn download_defold_api(&mut self, language_server_id: &LanguageServerId) -> Result<String> {
         if let Some(path) = &self.api_path {
-            return Ok(path.clone());
-        }
-        
-        // First, ensure we have the language server binary path
-        // This will set up the extension directory structure
-        if self.cached_binary_path.is_none() {
-            let _ = self.language_server_binary_path(language_server_id, worktree)?;
-        }
-        
-        // Get the current working directory - when Zed runs an extension,
-        // the working directory should be the extension's directory
-        // For dev extensions: "C:/Users/.../extensions/work/defold/"
-        // For installed extensions: "C:/Users/.../extensions/installed/defold/"
-        if let Ok(current_dir) = std::env::current_dir() {
-            let current_dir_str = current_dir.to_string_lossy().to_string();
-            
-            // Check if we're in the work directory (dev extension)
-            // If so, look for API files in the installed directory instead
-            let api_path = if current_dir_str.contains("extensions/work/") || current_dir_str.contains("extensions\\work\\") {
-                // We're in dev mode, use the installed directory for API files
-                // Convert: .../extensions/work/defold -> .../extensions/installed/defold/api
-                let path_str = current_dir_str
-                    .replace("extensions/work/", "extensions/installed/")
-                    .replace("extensions\\work\\", "extensions\\installed\\");
-                std::path::PathBuf::from(path_str).join("api")
-            } else {
-                // We're in installed mode, use local api directory
-                current_dir.join("api")
-            };
-            
-            let mut api_path_str = api_path.to_string_lossy().to_string();
-            
-            // Fix Windows path format: remove leading slash from "/C:/..." -> "C:/..."
-            // This happens when converting paths in WASM environment
-            if api_path_str.starts_with("/") && api_path_str.len() > 2 && api_path_str.chars().nth(2) == Some(':') {
-                api_path_str = api_path_str[1..].to_string();
+            // Check if the API path still exists
+            if std::fs::metadata(path).map_or(false, |stat| stat.is_dir()) {
+                return Ok(path.clone());
             }
-            
-            self.api_path = Some(api_path_str.clone());
-            return Ok(api_path_str);
         }
-        
-        // Fallback: return an error if we can't get the current directory
-        Err("Could not determine extension directory".into())
+
+        // Download the latest Defold annotations from astrochili/defold-annotations
+        zed::set_language_server_installation_status(
+            language_server_id,
+            &zed::LanguageServerInstallationStatus::Downloading,
+        );
+
+        let release = zed::latest_github_release(
+            "astrochili/defold-annotations",
+            zed::GithubReleaseOptions {
+                require_assets: false,
+                pre_release: false,
+            },
+        )?;
+
+        // Download the pre-packaged defold_api ZIP from releases
+        // URL format: https://github.com/astrochili/defold-annotations/releases/download/{version}/defold_api_{version}.zip
+        let download_url = format!(
+            "https://github.com/astrochili/defold-annotations/releases/download/{}/defold_api_{}.zip",
+            release.version,
+            release.version
+        );
+
+        let version_dir = format!("defold-api-{}", release.version);
+        // The ZIP contains a defold_api folder with all the Lua API files
+        let api_path_relative = format!("{}/defold_api", version_dir);
+
+        if !std::fs::metadata(&api_path_relative).map_or(false, |stat| stat.is_dir()) {
+            zed::download_file(
+                &download_url,
+                &version_dir,
+                zed::DownloadedFileType::Zip,
+            )
+            .map_err(|e| format!("failed to download Defold annotations: {e}"))?;
+
+            // Clean up old annotation versions
+            let entries = std::fs::read_dir(".")
+                .map_err(|e| format!("failed to list working directory {e}"))?;
+            for entry in entries {
+                let entry = entry.map_err(|e| format!("failed to load directory entry {e}"))?;
+                let entry_name = entry.file_name();
+                if let Some(name) = entry_name.to_str() {
+                    if name.starts_with("defold-api-") && name != version_dir {
+                        std::fs::remove_dir_all(&entry.path()).ok();
+                    }
+                }
+            }
+        }
+
+        // Convert to absolute path for the language server
+        let mut absolute_path = std::env::current_dir()
+            .map_err(|e| format!("failed to get current directory: {e}"))?
+            .join(&api_path_relative)
+            .to_string_lossy()
+            .to_string();
+
+        // Fix Windows path format: remove leading slash from "/C:/..." -> "C:/..."
+        // This happens when converting paths in WASM environment
+        if absolute_path.starts_with('/') && absolute_path.len() > 2 {
+            if let Some(second_char) = absolute_path.chars().nth(1) {
+                if let Some(third_char) = absolute_path.chars().nth(2) {
+                    if second_char.is_ascii_alphabetic() && third_char == ':' {
+                        absolute_path = absolute_path[1..].to_string();
+                    }
+                }
+            }
+        }
+
+        self.api_path = Some(absolute_path.clone());
+        Ok(absolute_path)
     }
     
     fn language_server_binary_path(
@@ -172,10 +203,10 @@ impl zed::Extension for DefoldExtension {
     fn language_server_initialization_options(
         &mut self,
         language_server_id: &LanguageServerId,
-        worktree: &zed::Worktree,
+        _worktree: &zed::Worktree,
     ) -> Result<Option<zed::serde_json::Value>> {
-        // Use bundled API annotations with absolute path
-        let api_path = self.get_api_path(language_server_id, worktree)?;
+        // Download and use Defold API definitions from GitHub
+        let api_path = self.download_defold_api(language_server_id)?;
         
         let workspace_config = serde_json::json!({
             "checkThirdParty": false,
@@ -241,10 +272,10 @@ impl zed::Extension for DefoldExtension {
     fn language_server_workspace_configuration(
         &mut self,
         language_server_id: &LanguageServerId,
-        worktree: &zed::Worktree,
+        _worktree: &zed::Worktree,
     ) -> Result<Option<zed::serde_json::Value>> {
-        // Use bundled API annotations with absolute path
-        let api_path = self.get_api_path(language_server_id, worktree)?;
+        // Download and use Defold API definitions from GitHub
+        let api_path = self.download_defold_api(language_server_id)?;
         
         let workspace_config = serde_json::json!({
             "Lua": {
