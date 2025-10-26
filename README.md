@@ -51,91 +51,137 @@ This creates `target/wasm32-wasip1/release/zed_defold.wasm`
 - [Rust](https://rustup.rs/) (latest stable version) - for manual builds
 - Zed editor installed
 
-## Features
+## Setup for Build Tasks
 
-- **🎁 Self-Contained**: All files bundled - no external dependencies or borrowed files from other extensions
-- **🎨 Syntax Highlighting**: Full Lua syntax highlighting for all Defold script types
-- **🤖 Lua Language Server**: Auto-configured for Defold with bundled API annotations
-  - **Bundled Defold API documentation** - works immediately after install
-  - Complete function signatures with parameter types
-  - Hover documentation for all Defold functions
-  - No downloads, no setup, no configuration!
-- **📚 Advanced Features**:
-  - Go-to-definition
-  - Find references
-  - Type hints and parameter info
-  - Real-time diagnostics
-  - Code completion
-- **📁 File Type Recognition**: Automatic recognition of `.script`, `.gui_script`, `.render_script`, and `.lua` files
-- **🧩 Smart Editing**: Bracket matching, auto-closing, indentation, and code outline
-- **🌐 Cross-Platform**: Works on Windows, macOS, and Linux
+### Prerequisites
 
-## Supported File Types
+1. **Install Defold**: Download from https://defold.com/download/
+2. **Install bob.jar**: Defold's command-line build tool
+   - Download from: https://github.com/defold/defold/releases
+   - Or use the one from your Defold installation
 
-This extension recognizes the following Defold file types:
-- `.script` - Game object scripts (lifecycle functions, collision handling)
-- `.gui_script` - GUI scripts (UI logic and interactions)
-- `.render_script` - Custom render scripts (rendering pipeline)
-- `.lua` - Lua modules (reusable code libraries)
+### Environment Variables
 
-## 🚀 Autocomplete Features
+To use build tasks, add these to your shell profile (`~/.bashrc`, `~/.zshrc`, or Windows Environment Variables):
 
-The extension includes **bundled Defold API annotations** that work automatically:
+```bash
+# Path to bob.jar (required for build tasks)
+export BOB_JAR="/path/to/bob.jar"
 
-✅ **Works out of the box:**
-- Function signatures with parameter types
-- Hover documentation for Defold functions
-- Parameter hints while typing
-- No errors on lifecycle functions (`init`, `update`, etc.)
-- No "undefined global" warnings for Defold modules
-- Full autocomplete for core APIs:
-  - `go.*` - Game object functions (get_position, set_position, animate, etc.)
-  - `msg.*` - Message passing (msg.post, msg.url, etc.)
-  - `vmath.*` - Vector math (vector3, quat, lerp, normalize, etc.)
-  - `gui.*` - GUI functions (get_node, animate, set_text, etc.)
-  - `sprite.*` - Sprite functions (play_flipbook, set_constant, etc.)
-  - `physics.*` - Physics functions (raycast, get_gravity, etc.)
-  - `sys.*` - System functions (get_sys_info, load_resource, etc.)
-  - `hash()` - Hash function
+# Defold credentials (optional, needed for cloud builds)
+export DEFOLD_EMAIL="your.email@example.com"
+export DEFOLD_AUTH="your_auth_token"
 
-### Example Autocomplete
+# Android signing (optional, for Android bundles)
+export ANDROID_KEYSTORE="/path/to/keystore.keystore"
+export ANDROID_KEYSTORE_PASS="your_password"
+export ANDROID_KEYSTORE_ALIAS="your_alias"
 
-```lua
-function init(self)
-    -- Type "go." and see all game object functions with docs:
-    local pos = go.get_position()  -- ✅ Shows signature and parameters
-    
-    -- Type "msg." for messaging:
-    msg.post("#", "my_message")  -- ✅ Shows parameter info
-    
-    -- Type "vmath." for math:
-    local v = vmath.vector3(1, 2, 3)  -- ✅ Type hints included
-    
-    -- Hover over any function for documentation!
-end
+# iOS signing (optional, for iOS bundles)
+export IOS_IDENTITY="iPhone Developer: Your Name"
+export IOS_PROVISIONING="/path/to/profile.mobileprovision"
 ```
 
-### No Setup Required
-- ✅ No Defold binary path needed
-- ✅ No external downloads
-- ✅ No configuration files
-- ✅ Just install and start coding!
+### Getting Your Auth Token
+
+1. Open Defold Editor
+2. Go to **File** → **Preferences**
+3. Copy your authentication token from the **General** tab
+
+### Alternative: Shell Scripts
+
+If you prefer shell scripts over Zed tasks, create these in your project:
+
+**`build.sh` (macOS/Linux):**
+```bash
+#!/bin/bash
+java -jar "$BOB_JAR" \
+  --email "$DEFOLD_EMAIL" \
+  --auth "$DEFOLD_AUTH" \
+  build
+```
+
+**`bundle.sh` (macOS/Linux):**
+```bash
+#!/bin/bash
+PLATFORM=${1:-js-web}
+java -jar "$BOB_JAR" \
+  --email "$DEFOLD_EMAIL" \
+  --auth "$DEFOLD_AUTH" \
+  --platform "$PLATFORM" \
+  --bundle-output build/bundle \
+  --variant debug \
+  resolve build bundle
+```
+
+Make them executable:
+```bash
+chmod +x build.sh bundle.sh
+```
+
+Then run from Zed's terminal:
+```bash
+./build.sh
+./bundle.sh x86_64-win32
+```
+
+### Available Platforms
+
+- `js-web` - HTML5
+- `x86_64-win32` - Windows 64-bit
+- `x86_64-macos` / `arm64-macos` - macOS Intel/Apple Silicon
+- `x86_64-linux` - Linux 64-bit
+- `arm64-android` / `armv7-android` - Android
+- `arm64-ios` / `x86_64-ios` - iOS
+
 
 ## Build Tasks
 
 While Zed extensions don't support custom commands (yet), you can use **Zed's task system** to run Defold build commands:
 
-1. Copy `tasks-template.json` from this repo to `.zed/tasks.json` in your Defold project
-2. Set up environment variables (see `DEFOLD_SETUP.md`)
+### Quick Install
+
+Use the installer script from the `scripts/` folder of this repository.
+
+Run from your Defold project root:
+
+**Windows:**
+```powershell
+# From your Defold project root
+path\to\zed-defold\scripts\install-tasks.ps1
+```
+
+**Linux/macOS:**
+```bash
+# From your Defold project root
+/path/to/zed-defold/scripts/install-tasks.sh
+```
+
+### Manual Setup (All platforms)
+
+1. Copy `defold-tasks.json` from this repository to `.zed/tasks.json` in your Defold project
+2. Set up environment variables (see [Environment Variables](#environment-variables) section above)
 3. Run tasks via `Ctrl+Shift+P` → "task: spawn"
 
-Available tasks:
+### Available tasks:
 - **Resolve Dependencies** - Download project dependencies
 - **Clean Build** - Clean the build folder  
 - **Build** - Build the project
 - **Bundle** - Bundle for HTML5, Windows, macOS, Linux, Android, iOS
 
-See [`DEFOLD_SETUP.md`](DEFOLD_SETUP.md) for detailed setup instructions.
+### Build Tasks Troubleshooting
+
+**"Could not find or load main class"**
+- Check that `BOB_JAR` environment variable points to a valid bob.jar file
+- Download bob.jar from https://github.com/defold/defold/releases
+
+**"Authentication required"**
+- Set `DEFOLD_EMAIL` and `DEFOLD_AUTH` environment variables
+- Or remove `--email` and `--auth` from task arguments for local builds
+
+**"Keystore not found"**
+- Check that keystore paths in environment variables are correct
+- Or remove keystore arguments from Android bundle tasks
 
 ## Code Snippets
 
@@ -143,9 +189,52 @@ See [`DEFOLD_SETUP.md`](DEFOLD_SETUP.md) for detailed setup instructions.
 
 ### Quick Install Snippets
 
+Use the installer script from the `scripts/` folder of this repository:
+
+**Windows:**
 ```powershell
-.\install-snippets.ps1
+path\to\zed-defold\scripts\install-snippets.ps1
 ```
+
+**Linux/macOS:**
+```bash
+/path/to/zed-defold/scripts/install-snippets.sh
+```
+
+### Manual Installation
+
+If you prefer to install snippets manually:
+
+**Windows:**
+```powershell
+# Create snippets directory
+New-Item -ItemType Directory -Force -Path "$env:APPDATA\Zed\snippets"
+
+# Copy the snippets file
+Copy-Item defold-snippets.json "$env:APPDATA\Zed\snippets\defold.json"
+```
+
+**macOS:**
+```bash
+# Create snippets directory
+mkdir -p "$HOME/Library/Application Support/Zed/snippets"
+
+# Copy the snippets file
+cp defold-snippets.json "$HOME/Library/Application Support/Zed/snippets/defold.json"
+```
+
+**Linux:**
+```bash
+# Create snippets directory
+mkdir -p ~/.config/zed/snippets
+
+# Copy the snippets file
+cp defold-snippets.json ~/.config/zed/snippets/defold.json
+```
+
+After installation, restart Zed or run `zed: reload extensions`.
+
+### Available Snippets
 
 The extension provides 26 code snippets for common Defold patterns:
 
@@ -197,94 +286,9 @@ function init(self)
 end
 ```
 
-## 📦 What's Included
-
-The extension is completely self-contained with:
-
-- ✅ Extension WASM binary (`extension.wasm`)
-- ✅ Extension configuration (`extension.toml`)
-- ✅ Bundled Lua grammar (`grammars/lua.wasm`)
-- ✅ Complete language support files:
-  - `highlights.scm` - Syntax highlighting rules
-  - `brackets.scm` - Bracket matching rules
-  - `indents.scm` - Indentation rules
-  - `outline.scm` - Code outline rules
-  - `embedding.scm` - Embedded language rules
-  - `config.toml` - Language configuration
-- ✅ Lua Language Server integration (auto-downloads on first use)
-
 **No external dependencies needed!** Everything is bundled in the project.
 
-## Development
-
-### Method 1: Install Dev Extension (Recommended for Development)
-
-1. In Zed, open the Command Palette (`Ctrl+Shift+P`)
-2. Run: `zed: install dev extension`
-3. Select this extension directory
-4. Zed will automatically build and install the extension
-5. Make changes and use `zed: reload extensions` to reload
-
-### Method 2: Manual Build and Install
-
-1. Build the extension:
-```bash
-cargo build --release --target wasm32-wasip1
-```
-
-2. Install using the script:
-```bash
-.\install.ps1
-```
-
-3. Restart Zed
-
-4. Make changes and rebuild as needed
-
-## Comparison with VSCode Extension
-
-This extension focuses on **coding experience** (autocomplete, documentation):
-- ✅ Same autocomplete quality as VSCode Defold extension
-- ✅ No Defold binary path needed
-- ✅ Zero configuration
-- ❌ No build/bundle features (use Defold Editor for that)
-
-See **[COMPARISON_WITH_VSCODE.md](COMPARISON_WITH_VSCODE.md)** for detailed comparison.
-
 ## Troubleshooting
-
-### Extension not loading
-
-- Make sure the WASM file is named `extension.wasm` (not `zed_defold.wasm`)
-- Check that all files are in the correct directory structure
-- Restart Zed after installation
-
-### Language server not working
-
-- The extension will automatically download the Lua Language Server on first use
-- Check the Zed log for any error messages: `zed: open log`
-- Make sure you're opening a file with `.script`, `.gui_script`, `.render_script`, or `.lua` extension
-
-### Snippets not appearing
-
-- **Install snippets first**: Run `.\install-snippets.ps1`
-- Snippets must be in `%APPDATA%\Zed\snippets\defold.json` (Windows)
-- The file must be named `defold.json` to match the language name
-- Restart Zed after installation
-- Type the full prefix (e.g., `init`) and press `Tab`
-- See `SNIPPETS_INSTALL.md` for detailed instructions
-
-### Defold API not recognized
-
-**All Defold APIs work out of the box!** The extension uses Defold's official Language Server fork which includes all API documentation.
-
-If autocomplete isn't working:
-1. Make sure you're opening a `.script`, `.gui_script`, or `.render_script` file
-2. Wait 10-20 seconds on first use (Language Server downloads automatically)
-3. Look for "Lua Language Server" in the status bar
-4. Try `Ctrl+Space` to manually trigger autocomplete
-
-See **[DEBUG_AUTOCOMPLETE.md](DEBUG_AUTOCOMPLETE.md)** for detailed troubleshooting.
 
 ## License
 

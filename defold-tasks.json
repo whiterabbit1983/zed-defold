@@ -1,8 +1,4 @@
 {
-  // Defold build tasks for Zed
-  // Copy this file to your Defold project as .zed/tasks.json
-  // Tasks can be run via: Ctrl+Shift+P -> "task: spawn"
-  
   "tasks": [
     {
       "label": "Defold: Resolve Dependencies",
