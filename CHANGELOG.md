@@ -5,6 +5,31 @@ All notable changes to the Defold extension for Zed will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.4] - 2025-10-26
+
+### Added
+- **Automatic Defold API Download**: Extension now automatically downloads pre-packaged Defold API annotations from [astrochili/defold-annotations](https://github.com/astrochili/defold-annotations) releases
+  - Downloads `defold_api_{version}.zip` instead of full source code
+  - Annotations are extracted to extension's working directory
+  - Automatic cleanup of old API versions
+- **Installation Scripts**: Added cross-platform installation scripts in `scripts/` folder
+  - `install-snippets.ps1` / `install-snippets.sh` - Install code snippets
+  - `install-tasks.ps1` / `install-tasks.sh` - Install build tasks in Defold projects
+- **Manual Snippets Installation**: Added detailed manual installation instructions for all platforms in README
+
+### Changed
+- **Documentation Consolidation**: Merged DEFOLD_SETUP.md into README.md for easier navigation
+  - All setup instructions now in one place
+  - Better organization with clear sections
+- **Renamed Files**:
+  - `tasks-template.json` → `defold-tasks.json` for clarity
+  - All references updated across documentation and scripts
+- **Script Organization**: Moved all installation scripts to dedicated `scripts/` folder
+- Updated README structure for better readability
+
+### Removed
+- `DEFOLD_SETUP.md` - Content moved to README.md
+
 ## [0.1.3] - 2025-10-25
 
 ### Changed
