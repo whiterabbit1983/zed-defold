@@ -54,7 +54,8 @@
   ],
   "diagnostics.disable": [
     "lowercase-global",
-    "trailing-space"
+    "trailing-space",
+    "duplicate-doc-field"
   ],
   "completion.keywordSnippet": "Both",
   "completion.callSnippet": "Both",
