@@ -100,6 +100,32 @@ impl DefoldExtension {
             }
         }
 
+        // Check if we already have any version downloaded
+        let (platform, _) = zed::current_platform();
+        let binary_extension = match platform {
+            zed::Os::Windows => ".exe",
+            _ => "",
+        };
+
+        // Look for any existing lua-language-server installation
+        if let Ok(entries) = std::fs::read_dir(".") {
+            for entry in entries.flatten() {
+                if let Some(name) = entry.file_name().to_str() {
+                    if name.starts_with("lua-language-server-") {
+                        let binary_path = format!(
+                            "{}/bin/lua-language-server{}",
+                            name, binary_extension
+                        );
+                        if std::fs::metadata(&binary_path).map_or(false, |stat| stat.is_file()) {
+                            self.cached_binary_path = Some(binary_path.clone());
+                            return Ok(binary_path);
+                        }
+                    }
+                }
+            }
+        }
+
+        // No existing installation found, download it
         zed::set_language_server_installation_status(
             language_server_id,
             &zed::LanguageServerInstallationStatus::CheckingForUpdate,
